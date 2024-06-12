@@ -1,148 +1,196 @@
-
 using System;
-using System.Collections.Generic;
 using System.IO;
-
-class Entry
-{
-    public string Prompt { get; }
-    public string Response { get; }
-    public string Date { get; }
-
-    public Entry(string prompt, string response, string date)
-    {
-        Prompt = prompt;
-        Response = response;
-        Date = date;
-    }
-
-    public override string ToString()
-    {
-        return $"Date: {Date}\nPrompt: {Prompt}\nResponse: {Response}\n";
-    }
-}
-
-class Journal
-{
-    private List<Entry> entries;
-
-    public Journal()
-    {
-        entries = new List<Entry>();
-    }
-
-    public void AddEntry(Entry entry)
-    {
-        entries.Add(entry);
-    }
-
-    public void DisplayEntries()
-    {
-        foreach (Entry entry in entries)
-        {
-            Console.WriteLine(entry);
-        }
-    }
-
-    public void SaveToFile(string filename)
-    {
-        using (StreamWriter writer = new StreamWriter(filename))
-        {
-            foreach (Entry entry in entries)
-            {
-                writer.WriteLine(entry.ToString());
-            }
-        }
-        Console.WriteLine("Journal saved successfully!");
-    }
-
-    public void LoadFromFile(string filename)
-    {
-        entries.Clear();
-        string[] lines = File.ReadAllLines(filename);
-        for (int i = 0; i < lines.Length; i += 4)
-        {
-            string date = lines[i].Substring(lines[i].IndexOf(':') + 2);
-            string prompt = lines[i + 1].Substring(lines[i + 1].IndexOf(':') + 2);
-            string response = lines[i + 2].Substring(lines[i + 2].IndexOf(':') + 2);
-            entries.Add(new Entry(prompt, response, date));
-        }
-        Console.WriteLine("Journal loaded successfully!");
-    }
-}
-
+using static Entry;
 class Program
 {
-    private Journal journal;
-    private string[] prompts = {
-        "Who was the most interesting person I interacted with today?",
-        "What was the best part of my day?",
-        "How did I see the hand of the Lord in my life today?",
-        "What was the strongest emotion I felt today?",
-        "If I had one thing I could do over today, what would it be?"
-    };
-
-    public Program()
+    static void Main(string[] args)
     {
-        journal = new Journal();
-    }
+        //Creates a new instance of Journal
+        Journal journal = new Journal();
 
-    public void Run()
-    {
+        //Welcome banner
+        Console.WriteLine("Welcome to Your Daily Journal!");
+
         while (true)
         {
-            Console.WriteLine("\n1. Write a new entry");
-            Console.WriteLine("2. Display the journal");
-            Console.WriteLine("3. Save the journal to a file");
-            Console.WriteLine("4. Load the journal from a file");
-            Console.WriteLine("5. Exit");
+            Console.WriteLine("Menu:");
+            Console.WriteLine("1. Add Entry");
+            Console.WriteLine("2. Display");
+            Console.WriteLine("3. Load");
+            Console.WriteLine("4. Save");
+            Console.WriteLine("5. Quit");
 
-            Console.Write("Enter your choice: ");
+            //Requests user selection for action to take
+            Console.Write("Please select an option (1-5) ");
             string choice = Console.ReadLine();
 
+            //Calls class methods per user selection
             switch (choice)
             {
+                //Adds new entry
                 case "1":
-                    WriteNewEntry();
+                    journal.AddEntry();
                     break;
+
+                //Displays added entries
                 case "2":
                     journal.DisplayEntries();
                     break;
+
+                //Loads entries from a file
                 case "3":
-                    Console.Write("Enter filename to save: ");
-                    string saveFilename = Console.ReadLine();
-                    journal.SaveToFile(saveFilename);
+                    journal.LoadFromFile();
                     break;
+
+                //Saves entries to a file
                 case "4":
-                    Console.Write("Enter filename to load: ");
-                    string loadFilename = Console.ReadLine();
-                    journal.LoadFromFile(loadFilename);
+                    journal.SaveToFile();
                     break;
+
+                //Exits program
                 case "5":
-                    Console.WriteLine("Exiting...");
+                    Console.WriteLine("Goodbye!");
                     return;
+
+                //Handles invalid input
                 default:
-                    Console.WriteLine("Invalid choice! Please enter a number between 1 and 5.");
+                    Console.WriteLine("Invalid selection, please enter a number 1-5.");
                     break;
             }
         }
     }
+}
 
-    private void WriteNewEntry()
+public class PromptGenerator
+{
+    public List<string> Prompts { get; set; }
+
+    public PromptGenerator()
     {
-        Random random = new Random();
-        string prompt = prompts[random.Next(prompts.Length)];
-        Console.WriteLine(prompt);
-        Console.Write("Enter your response: ");
-        string response = Console.ReadLine();
-        string date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        journal.AddEntry(new Entry(prompt, response, date));
-        Console.WriteLine("Entry recorded successfully!");
+        Prompts = new List<string> {
+            "What was the best part of your day?",
+            "Write about an experience where you felt the spirit with you today:",
+            "Who was the most interesting person you interacted with today?",
+            "Write about something that happened for which you are grateful today:",
+            "If you had one thing you could do over today, what would it be?",
+            "What was the strongest emotion you felt today?",
+            "Write about an act of service you either witnessed or performed today:>",
+            "Write about something you learned today:",
+            "Write about a tender mercy you noticed today:",
+            "Write about a positive interaction you had with someone else today:",
+            "Write about something you noticed that reminded you of Jesus Christ today:",
+            "Write about something you learned about someone in your life today:",
+            "Write about an experience you had that allowed you to teach someone else today:"
+        };
     }
 
-    static void Main(string[] args)
+    //Generates a random prompt from the list
+    public string GenerateRandomPrompt()
     {
-        Program program = new Program();
-        program.Run();
+        Random random = new Random();
+        int index = random.Next(Prompts.Count);
+        return Prompts[index];
+    }
+
+}
+
+public class Entry
+{
+    public string DateCreated { get; }
+    public string Content { get; }
+
+    //Initializes the date and content of an entry from user input
+    public Entry(string dateInput, string content)
+    {
+        DateCreated = dateInput;
+        Content = content;
+    }
+
+    //Displays the content of an entry
+    public void DisplayEntry()
+    {
+        Console.WriteLine($"Date: {DateCreated}");
+        Console.WriteLine($"Content: {Content}\n");
+    }
+    public class Journal
+    {
+        public List<Entry> entries;
+        public PromptGenerator promptGenerator;
+
+        //Constructor initializes and empty list of entries
+        public Journal()
+        {
+            entries = new List<Entry>();
+            //Initializes the prompt generator
+            promptGenerator = new PromptGenerator();
+        }
+
+        //Adds a new entry to the journal from user input
+        public void AddEntry()
+        {
+
+            string prompt = promptGenerator.GenerateRandomPrompt();
+            Console.Write("Please enter the date(mm/dd/yyyy): ");
+            string dateInput = Console.ReadLine();
+            Console.WriteLine($"Today's Prompt: {prompt}");
+            Console.Write("> ");
+            string content = Console.ReadLine();
+        }
+
+        //Displays data input this session
+        public void DisplayEntries()
+        {
+            foreach (Entry entry in entries)
+            {
+                entry.DisplayEntry();
+            }
+        }
+
+        //Saves Entries to a file named by the user
+        public void SaveToFile()
+        {
+            Console.Write("Please enter the filename you would like to save to: ");
+            string filename = Console.ReadLine();
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(filename))
+                {
+                    foreach (Entry entry in entries)
+                    {
+                        writer.WriteLine($"{entry.DateCreated}\n{entry.Content}");
+                    }
+                }
+                Console.WriteLine($"Journal entries saved to {filename}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error saving entries to {filename}: {e.Message}");
+            }
+        }
+
+        //Loads Entries from a file named by the user
+        public void LoadFromFile()
+        {
+            Console.Write("Please enter the file name you would like to load from: ");
+            String filename = Console.ReadLine();
+            try
+            {
+                using (StreamReader reader = new StreamReader(filename))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        string dateString = reader.ReadLine();
+                        string content = reader.ReadLine();
+                        Entry entry = new Entry(dateString, content);
+                        entries.Add(entry);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error loading entries from :filename: {e.Message}");
+            }
+        }
+
     }
 }
