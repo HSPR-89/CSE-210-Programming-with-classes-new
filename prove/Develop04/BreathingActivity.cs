@@ -8,13 +8,22 @@ class BreathingActivity : Activity
     }
     public void Run()
     {
-        ShowCountDown(40);
-       /* Console.Write("Breathe in...");
-        ShowCountDown(_duration);
 
-        Console.Write("Now breathe out...");
-        ShowCountDown(_duration);*/
+        DateTime startTime = DateTime.Now;
+        DateTime futureTime = startTime.AddSeconds(_duration);
+
+        DateTime currentTime = DateTime.Now;
+        while (currentTime < futureTime)
+        {
+            Console.Write("\n \n");
+            Console.Write($"Breathe in...");
+            ShowCountDown(4);
+
+            Console.Write("\n");
+            Console.Write($"Now Breathe out...");
+            ShowCountDown(6);
+
+            currentTime = DateTime.Now;
+        }
     }
-
-
 }

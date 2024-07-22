@@ -49,21 +49,23 @@ class Activity
         Console.WriteLine("How long, in seconds, would you like for your session?");
         _duration = Convert.ToInt32(Console.ReadLine());
         Console.Clear();
+        Console.WriteLine("Get Ready...");
         ShowSpinner(2);
-
-
-
     }
 
     public void DisplayEndingMessage()
     {
-
+        Console.WriteLine("\n");
+        Console.WriteLine($"Well done!!");
+        ShowSpinner(2);
+        Console.WriteLine($"You have completed another {_duration} seconds of the {_name}");
+        ShowSpinner(2);
     }
+
 
     public void ShowSpinner(int seconds)
     {
-        Console.WriteLine("Get Ready...");
-        //Thread.Sleep(10000);
+
 
         for (int i = 0; i < seconds; i++)
         {
@@ -91,23 +93,15 @@ class Activity
 
     public void ShowCountDown(int seconds)
     {
-        Console.Write("\n");
-        Console.Write($"Breathe in...");
-        for (int i = 4; i > seconds; i--)
+
+        for (int i = seconds; i > 0; i--)
         {
             Console.Write(i);
             Thread.Sleep(1000);
             Console.Write("\b \b"); // Erase the + character
 
         }
-        Console.Write("\n");
-        Console.Write($"Now Breathe out...");
-        for (int i = 6; i > 0; i--)
-        {
-            Console.Write(i);
-            Thread.Sleep(1000);
-            Console.Write("\b \b"); // Erase the + character
-        }
+
     }
 }
 
