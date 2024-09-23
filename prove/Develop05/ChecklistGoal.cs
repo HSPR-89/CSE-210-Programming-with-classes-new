@@ -1,15 +1,16 @@
 using System;
 
-class CheckListGoal
+class CheckListGoal : Goal
 {
     protected int _AmountCompleted;
     protected int _target;
     protected int _bonus;
 
 
-    public CheckListGoal (string name, string description, string points, string target, string bonus)
+    public CheckListGoal(string name, string description, string points, int target, int bonus) : base(name, description, points)
     {
-
+        this._target = target;
+        this._bonus = bonus;
     }
 
     public void RecordEvent()
@@ -19,17 +20,17 @@ class CheckListGoal
 
     public bool IsComplete()
     {
-
+return false;
     }
 
-     public void GetDetailString()
+    public string GetDetailString()
     {
-
+return "";
     }
 
-    public void GetStringRepresentation()
+    public override string GetStringRepresentation()
     {
-
+        return (_shortName);
     }
 
 }

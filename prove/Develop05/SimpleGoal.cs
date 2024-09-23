@@ -1,11 +1,11 @@
 using System;
 
-class SimpleGoal
+class SimpleGoal:Goal
 {
     protected string _IsComplete;
     
 
-    public SimpleGoal(string name, string description, string points)
+    public SimpleGoal(string name, string description, string points) : base (name, description, points)
     {
 
     }
@@ -17,12 +17,12 @@ class SimpleGoal
 
     public bool IsComplete()
     {
-
+return true;
     }
 
-    public void GetStringRepresentation()
+    public override string GetStringRepresentation() 
     {
-
+return (_shortName);
     }
 
 }

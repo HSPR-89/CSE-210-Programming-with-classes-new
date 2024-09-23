@@ -1,15 +1,11 @@
 using System;
 
-class EternalGoal
+class EternalGoal : Goal
 {
-    protected string _IsComplete;
-    
-
-    public EternalGoal
-    
-    (string name, string description, string points)
+   
+    public EternalGoal(string name, string description, string points) : base(name, description, points)
     {
-
+       
     }
 
     public void RecordEvent()
@@ -19,12 +15,12 @@ class EternalGoal
 
     public bool IsComplete()
     {
-
+        return true;
     }
 
-    public void GetStringRepresentation()
+    public override string GetStringRepresentation()
     {
-
+        return (_shortName);
     }
 
 }
